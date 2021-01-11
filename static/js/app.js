@@ -11,7 +11,7 @@ $(document).ready(function () {
     });
 
     const settings = {
-        "url": "/quotes.json",
+        "url": "quotes.json",
         "method": "GET"
     }
 
