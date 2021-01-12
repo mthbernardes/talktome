@@ -3,8 +3,13 @@ $(document).ready(function () {
     let message;
     let timer
 
+    //https://www.youtube.com/watch?v=p4wsvdHSOPQ
+    let audio = new Audio('static/media/tada.mp3');
+
     $("#text").click(function () {
         var msg = new SpeechSynthesisUtterance();
+        msg.rate = 0.8;
+        msg.volume= 2.0;
         msg.text = this.textContent;
         window.speechSynthesis.speak(msg);
 
@@ -70,6 +75,8 @@ $(document).ready(function () {
         var transcript = event.results[current][0].transcript.toLowerCase().replace(/[^a-z0-9]+/gi, " ");
         if (transcript == message) {
             confetti_loop()
+            audio.play();
+
             $("#text-detected").text("Congratulations you nailed it!");
         } else {
             $("#text-detected").text(transcript);
