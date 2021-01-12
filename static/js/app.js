@@ -1,18 +1,24 @@
 $(document).ready(function () {
     let data;
     let message;
-    let timer
+    let timer;
+    let counter = 0;
 
     //https://www.youtube.com/watch?v=p4wsvdHSOPQ
     let audio = new Audio('static/media/tada.mp3');
 
     $("#text").click(function () {
         var msg = new SpeechSynthesisUtterance();
-        msg.rate = 0.8;
-        msg.volume= 2.0;
+        if (counter == 0){
+            msg.rate = 1.5;
+            counter +=1;
+        } else {
+            msg.rate = 0.4;
+            counter = 0
+        }
+        msg.volume= 2;
         msg.text = this.textContent;
         window.speechSynthesis.speak(msg);
-
     });
 
     const settings = {
