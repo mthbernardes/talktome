@@ -12,9 +12,7 @@ function compare_sentences(sentence_provided,sentence_original) {
         }
         if (s1Parts[i] == s2Parts[i]) {
             msg.appendChild(document.createTextNode(word))
-            console.log(word)
         } else {
-            console.log(word)
             wrong_word = document.createElement("p")
             wrong_word.textContent = word
             wrong_word.style.display = "inline"
