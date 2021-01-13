@@ -10,15 +10,22 @@
 </head>
 
 <body>
+
+    <div style="display: inline;">
+    </div>
+    <div class="header">
+        <img class="header-img"
+            src="static/media/logo.png"
+            alt="logo">
+    </div>
+
     <!--https://codepen.io/andrewwwcollins/pen/KQeXrX -->
     <canvas id="waves"></canvas>
 
     <div class="flexbox-container" onselectstart="return false">
-
         <div class="flexbox-item flexbox-item-1">
             <h1 id="text"></h1>
             <h2 id="text-detected">Click in the text to listen the sentence!</h2>
-            <h2 id="result"></h2>
         </div>
 
         <!-- https://codepen.io/ys-wd/pen/oZgZwK -->
@@ -34,6 +41,7 @@
         </div>
     </div>
 
+    <script src="static/js/utils.js"></script>
     <script src="static/js/app.js"></script>
     <script src="static/js/waves.js"></script>
 </body>

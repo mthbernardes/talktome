@@ -7,9 +7,9 @@ var height = canvas.height = window.innerHeight;
 
 var waves = [];
 // Change these for more waves or bigger waves
-const count = 7;
+const count = 4;
 const waveHeight = 70;
-var colors = ['#ED553B', '#F2B134', '#068587', '#062887', '#870658', '#870606'];
+var colors = ['#112F41', '#C497BE', '#917CA4', '#616286'];
 
 window.addEventListener('resize', resizeCanvas, false);
 
@@ -26,7 +26,7 @@ function init_waves() {
 }
 
 function update() {
-    context.fillStyle = '#112F41';
+    context.fillStyle = "#2A4558";
     context.globalCompositeOperation = 'source-over';
     context.fillRect(0, 0, width, height);
 

@@ -4,22 +4,11 @@ let TIMER;
 let COUNTER = 0;
 let LISTENING = false;
 let TEXT_DETECT_MSG = "Click in the text to listen the sentence!";
-//https://www.youtube.com/watch?v=p4wsvdHSOPQ
-let AUDIO = new Audio('static/media/tada.mp3');
-
-function generate_random_phrase(data) {
-    position = Math.floor(Math.random() * data.length);
-    raw_message = data[position]["text"];
-    MESSAGE = raw_message.toLowerCase().replace(/[^a-z0-9]+/gi, " ").trim();
-    $("#text-detected").text(TEXT_DETECT_MSG);
-    $("#text").text(raw_message);
-}
-
-function sleep(time) {
-    return new Promise((resolve) => setTimeout(resolve, time));
-}
 
 $(document).ready(function () {
+    //https://www.youtube.com/watch?v=p4wsvdHSOPQ
+    let AUDIO = new Audio('static/media/tada.mp3');
+    
     $("#text").click(function () {
         var msg = new SpeechSynthesisUtterance();
         if (COUNTER == 0) {
@@ -44,7 +33,7 @@ $(document).ready(function () {
         PHRASES_DATA = response;
         generate_random_phrase(PHRASES_DATA);
 
-        $("#skip").click(function (){
+        $("#skip").click(function () {
             generate_random_phrase(PHRASES_DATA);
         });
 
@@ -115,7 +104,7 @@ $(document).ready(function () {
                 init_waves()
             });
         } else {
-            text_detected.text(event.results[current][0].transcript);
+            compare_sentences(transcript, MESSAGE)
         }
     }
 });
