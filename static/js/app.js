@@ -3,17 +3,16 @@ let MESSAGE;
 let TIMER;
 let COUNTER = 0;
 let LISTENING = false;
-
-let MALDITO;
-
+let TEXT_DETECT_MSG = "Click in the text to listen the sentence!";
 //https://www.youtube.com/watch?v=p4wsvdHSOPQ
-let audio = new Audio('static/media/tada.mp3');
+let AUDIO = new Audio('static/media/tada.mp3');
 
 function generate_random_phrase(data) {
-    position = Math.floor(Math.random() * data.length)
-    raw_message = data[position]["text"]
-    MESSAGE = raw_message.toLowerCase().replace(/[^a-z0-9]+/gi, " ").trim()
-    $("#text").text(raw_message)
+    position = Math.floor(Math.random() * data.length);
+    raw_message = data[position]["text"];
+    MESSAGE = raw_message.toLowerCase().replace(/[^a-z0-9]+/gi, " ").trim();
+    $("#text-detected").text(TEXT_DETECT_MSG);
+    $("#text").text(raw_message);
 }
 
 function sleep(time) {
@@ -38,12 +37,16 @@ $(document).ready(function () {
     const settings = {
         "url": "static/data/quotes.json",
         "method": "GET"
-    }
+    };
 
     $.ajax(settings).done(function (response) {
 
         PHRASES_DATA = response;
         generate_random_phrase(PHRASES_DATA);
+
+        $("#skip").click(function (){
+            generate_random_phrase(PHRASES_DATA);
+        });
 
         $("#button-start").click(function () {
             if (LISTENING) {
@@ -100,14 +103,14 @@ $(document).ready(function () {
         var text_detected = $("#text-detected");
 
         if (transcript == MESSAGE) {
-            audio.play();
+            AUDIO.play();
             text_detected.css('color', 'white');
             text_detected.text("Congratulations you nailed it!")
             let button_div = $(".flexbox-item-2");
             button_div.hide();
             sleep(3000).then(() => {
                 generate_random_phrase(PHRASES_DATA);
-                text_detected.text("Click in the text to listen the sentence!");
+                text_detected.text();
                 button_div.show();
                 init_waves()
             });

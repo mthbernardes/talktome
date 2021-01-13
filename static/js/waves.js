@@ -1,4 +1,4 @@
-let canvas = document.querySelector('canvas');
+let canvas = document.getElementById('waves');
 let context = canvas.getContext('2d');
 
 
