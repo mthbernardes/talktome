@@ -13,11 +13,11 @@ var colors = ['#ED553B', '#F2B134', '#068587', '#062887', '#870658', '#870606'];
 
 window.addEventListener('resize', resizeCanvas, false);
 
-init();
+init_waves();
 
 // ************************
 
-function init() {
+function init_waves() {
     // Create the waves
     for (let i = 0; i < count; i++) {
         createWave(colors[i], 5);

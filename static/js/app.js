@@ -1,52 +1,70 @@
+let PHRASES_DATA;
+let MESSAGE;
+let TIMER;
+let COUNTER = 0;
+let LISTENING = false;
+
+let MALDITO;
+
+//https://www.youtube.com/watch?v=p4wsvdHSOPQ
+let audio = new Audio('static/media/tada.mp3');
+
+function generate_random_phrase(data) {
+    position = Math.floor(Math.random() * data.length)
+    raw_message = data[position]["text"]
+    MESSAGE = raw_message.toLowerCase().replace(/[^a-z0-9]+/gi, " ").trim()
+    $("#text").text(raw_message)
+}
+
+function sleep(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+
 $(document).ready(function () {
-    let data;
-    let message;
-    let timer;
-    let counter = 0;
-
-    //https://www.youtube.com/watch?v=p4wsvdHSOPQ
-    let audio = new Audio('static/media/tada.mp3');
-
     $("#text").click(function () {
         var msg = new SpeechSynthesisUtterance();
-        if (counter == 0){
+        if (COUNTER == 0) {
             msg.rate = 1.5;
-            counter +=1;
+            COUNTER += 1;
         } else {
             msg.rate = 0.4;
-            counter = 0
+            COUNTER = 0
         }
-        msg.volume= 2;
+        msg.volume = 2;
         msg.text = this.textContent;
         window.speechSynthesis.speak(msg);
     });
 
     const settings = {
-        "url": "quotes.json",
+        "url": "static/data/quotes.json",
         "method": "GET"
     }
 
     $.ajax(settings).done(function (response) {
-        data = response
-        position = Math.floor(Math.random() * data.length)
-        message = data[position]["text"].toLowerCase().replace(/[^a-z0-9]+/gi, " ").trim()
-        $("#text").text(data[position]["text"])
+
+        PHRASES_DATA = response;
+        generate_random_phrase(PHRASES_DATA);
 
         $("#button-start").click(function () {
-            recognition.start();
+            if (LISTENING) {
+                $("#button-text").text("SPEAK");
+                recognition.stop()
+                clearInterval(TIMER);
+                LISTENING = false;
+            }
+            else {
+                $("#button-text").text("PRESS AFTER DONE");
+                recognition.continuous = true;
+                recognition.start();
+                LISTENING = true;
+            }
         });
-
-        $("#button-stop").click(function () {
-            console.log("stopped")
-            recognition.stop()
-            clearInterval(timer);
-        });
-
     });
 
     try {
         var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         var recognition = new SpeechRecognition();
+        recognition.continuous = true;
     }
     catch (e) {
         console.error(e);
@@ -58,36 +76,43 @@ $(document).ready(function () {
     recognition.lang = 'en-US';
 
     recognition.onstart = function () {
-        timer = setInterval(update, 1)
-        document.getElementById("button-start").disabled = true;
+        TIMER = setInterval(update, 1)
     }
 
     recognition.onerror = function (event) {
         if (event.error == 'no-speech') {
-            clearInterval(timer);
-            $("#text-detected").text("No speech was detected");
-            document.getElementById("button-start").disabled = false;
+            clearInterval(TIMER);
+            var text_detected = $("#text-detected");
+            text_detected.css('color', 'red');
+            text_detected.text("No speech was detected")
+            $("#button-text").text("SPEAK");
         };
     }
 
     recognition.onspeechend = function () {
-        clearInterval(timer);
-        document.getElementById("button-start").disabled = false;
+        clearInterval(TIMER);
         recognition.stop();
     }
 
     recognition.onresult = function (event) {
         var current = event.resultIndex;
         var transcript = event.results[current][0].transcript.toLowerCase().replace(/[^a-z0-9]+/gi, " ");
-        if (transcript == message) {
-            confetti_loop()
+        var text_detected = $("#text-detected");
+
+        if (transcript == MESSAGE) {
             audio.play();
-
-            $("#text-detected").text("Congratulations you nailed it!");
+            text_detected.css('color', 'white');
+            text_detected.text("Congratulations you nailed it!")
+            let button_div = $(".flexbox-item-2");
+            button_div.hide();
+            sleep(3000).then(() => {
+                generate_random_phrase(PHRASES_DATA);
+                text_detected.text("Click in the text to listen the sentence!");
+                button_div.show();
+                init_waves()
+            });
         } else {
-            $("#text-detected").text(transcript);
+            text_detected.text(event.results[current][0].transcript);
         }
-        $("#result").text()
     }
-
 });
